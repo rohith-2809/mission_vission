@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Shop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        section {
+            display: none;
+            padding: 20px;
+        }
+
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+            width: 200px;
+            transition: transform 0.2s;
+        }
+
+        .item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .item h3 {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .item p {
+            font-size: 16px;
+            color: #888;
+        }
+
+        .description {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .item:hover {
+            transform: scale(1.05);
+        }
+
+        .item:hover .description {
+            display: block;
+        }
+
+        button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #cart, #favorites {
+            position: inherit;
+            top: 60px;
+            right: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display:none;
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        #cart.show, #favorites.show {
+            display: block;
+        }
+
+        .cart-item, .favorite-item {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .cart-actions {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .cart-actions button {
+            background-color: #dc3545;
+        }
+
+        .cart-actions button:hover {
+            background-color: #c82333;
+        }
+
+        @media (max-width: 768px) {
+            #cart, #favorites {
+                width: 80%;
+                right: 10%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Online Shop</h1>
+        <nav>
+            <ul>
+                <li><a href="#" onclick="showSection('home')">Home</a></li>
+                <li><a href="#" onclick="showSection('spices')">Spices</a></li>
+                <li><a href="#" onclick="showSection('produce')">Produce</a></li>
+                <li><a href="#" onclick="showSection('lentils')">Lentils</a></li>
+                <li><a href="#" onclick="showSection('dairy')">Dairy</a></li>
+                <li><a href="#" onclick="showSection('oils')">Oils</a></li>
+                <li><a href="#" onclick="showSection('flours')">Flours & Baking Essentials</a></li>
+                <li><a href="#" onclick="showSection('misc')">Miscellaneous</a></li>
+                <li><a href="#" onclick="showSection('beverages')">Beverages</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home" style="display: block;">
+        <h2>Home</h2>
+        <div class="products" id="homeList"></div>
+    </section>
+
+    <section id="spices">
+        <h2>Spices</h2>
+        <div class="products" id="spicesList"></div>
+    </section>
+
+    <section id="produce">
+        <h2>Produce</h2>
+        <div class="products" id="produceList"></div>
+    </section>
+
+    <section id="lentils">
+        <h2>Lentils</h2>
+        <div class="products" id="lentilsList"></div>
+    </section>
+
+    <section id="dairy">
+        <h2>Dairy</h2>
+        <div class="products" id="dairyList"></div>
+    </section>
+
+    <section id="oils">
+        <h2>Oils</h2>
+        <div class="products" id="oilsList"></div>
+    </section>
+
+    <section id="flours">
+        <h2>Flours & Baking Essentials</h2>
+        <div class="products" id="floursList"></div>
+    </section>
+
+    <section id="misc">
+        <h2>Miscellaneous</h2>
+        <div class="products" id="miscList"></div>
+    </section>
+
+    <section id="beverages">
+        <h2>Beverages</h2>
+        <div class="products" id="beveragesList"></div>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 Online Shop. All rights reserved.</p>
+    </footer>
+
+    <div id="cart">
+        <h3>Cart</h3>
+        <div id="cartItems"></div>
+        <div class="cart-actions">
+            <p id="cartTotal"></p>
+            <button onclick="clearCart()">Clear Cart</button>
+        </div>
+    </div>
+
+    <div id="favorites">
+        <h3>Favorites</h3>
+        <div id="favoriteItems"></div>
+    </div>
+
+    <script>
+        const products = {
+            spices: [
+                { name: 'Cumin Powder (200 g)', price: 150, image: 'cumin-powder.jpg', description: 'High-quality cumin powder for rich and aromatic flavors.' },
+                { name: 'Turmeric Powder (500 g)', price: 250, image: 'Gemini_Generated_Image_mxjbcsmxjbcsmxjb.jpeg', description: 'Pure turmeric powder with a vibrant color and taste.' },
+                { name: 'Black Pepper (1 kg)', price: 800, image: 'black-pepper.jpg', description: 'High-quality black pepper for seasoning and cooking.' }
+            ],
+            produce: [
+                { name: 'Organic Apples (1 kg)', price: 300, image: 'organic-apples.jpg', description: 'Fresh and juicy organic apples.' },
+                { name: 'Bananas (1 dozen)', price: 100, image: 'bananas.jpg', description: 'Ripe and sweet bananas.' },
+                { name: 'Carrots (500 g)', price: 50, image: 'carrots.jpg', description: 'Crunchy and fresh carrots.' }
+            ],
+            lentils: [
+                { name: 'Red Lentils (1 kg)', price: 120, image: 'red-lentils.jpg', description: 'Premium quality red lentils for healthy meals.' },
+                { name: 'Green Gram (1 kg)', price: 140, image: 'green-gram.jpg', description: 'Nutritious and delicious green gram.' },
+                { name: 'Black Beans (500 g)', price: 90, image: 'black-beans.jpg', description: 'High-protein black beans for various dishes.' }
+            ],
+            dairy: [
+                { name: 'Fresh Milk (1 litre)', price: 60, image: 'fresh-milk.jpg', description: 'Pure and fresh milk from local farms.' },
+                { name: 'Cheddar Cheese (200 g)', price: 180, image: 'cheddar-cheese.jpg', description: 'Rich and creamy cheddar cheese.' },
+                { name: 'Greek Yogurt (500 g)', price: 150, image: 'greek-yogurt.jpg', description: 'Thick and creamy Greek yogurt.' }
+            ],
+            oils: [
+                { name: 'Olive Oil (1 litre)', price: 500, image: 'olive-oil.jpg', description: 'Extra virgin olive oil for healthy cooking.' },
+                { name: 'Coconut Oil (500 ml)', price: 300, image: 'coconut-oil.jpg', description: 'Organic coconut oil for cooking and skincare.' },
+                { name: 'Sunflower Oil (1 litre)', price: 200, image: 'sunflower-oil.jpg', description: 'Pure sunflower oil for everyday cooking.' }
+            ],
+            flours: [
+                { name: 'Whole Wheat Flour (1 kg)', price: 40, image: 'whole-wheat-flour.jpg', description: 'Organic whole wheat flour for healthy baking.' },
+                { name: 'All-Purpose Flour (1 kg)', price: 30, image: 'all-purpose-flour.jpg', description: 'Versatile all-purpose flour for various recipes.' },
+                { name: 'Almond Flour (500 g)', price: 350, image: 'almond-flour.jpg', description: 'Gluten-free almond flour for baking.' }
+            ],
+            misc: [
+                { name: 'Honey (500 g)', price: 250, image: 'honey.jpg', description: 'Pure and natural honey from local farms.' },
+                { name: 'Peanut Butter (1 kg)', price: 400, image: 'peanut-butter.jpg', description: 'Creamy and delicious peanut butter.' },
+                { name: 'Almonds (250 g)', price: 300, image: 'almonds.jpg', description: 'Crunchy and nutritious almonds.' }
+            ],
+            beverages: [
+                { name: 'Green Tea (100 g)', price: 150, image: 'green-tea.jpg', description: 'Refreshing and healthy green tea.' },
+                { name: 'Coffee Beans (500 g)', price: 450, image: 'coffee-beans.jpg', description: 'Premium quality coffee beans for a rich brew.' },
+                { name: 'Orange Juice (1 litre)', price: 120, image: 'orange-juice.jpg', description: 'Freshly squeezed orange juice.' }
+            ]
+        };
+
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(section => {
+                section.style.display = section.id === sectionId ? 'block' : 'none';
+            });
+        }
+
+        function loadProducts() {
+            for (const category in products) {
+                const productContainer = document.getElementById(`${category}List`);
+                products[category].forEach(product => {
+                    const productElement = document.createElement('div');
+                    productElement.className = 'item';
+                    productElement.innerHTML = `
+                        <img src="${product.image}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p>${product.price} Rs</p>
+                        <div class="description">${product.description}</div>
+                        <button onclick="addToCart('${product.name}', ${product.price}, '${product.image}')">Add to Cart</button>
+                        <button onclick="addToFavorites('${product.name}', '${product.image}')">Add to Favorites</button>
+                    `;
+                    productContainer.appendChild(productElement);
+                });
+            }
+        }
+
+        function loadHomeProducts() {
+            const homeList = document.getElementById('homeList');
+            const allProducts = Object.values(products).flat();
+            const randomProducts = allProducts.sort(() => 0.5 - Math.random()).slice(0, 6);
+
+            randomProducts.forEach(product => {
+                const discountedPrice = (product.price * 0.9).toFixed(2);
+                const productElement = document.createElement('div');
+                productElement.className = 'item';
+                productElement.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>Original: ${product.price} Rs</p>
+                    <p>Discounted: ${discountedPrice} Rs</p>
+                    <div class="description">${product.description}</div>
+                    <button onclick="addToCart('${product.name}', ${discountedPrice}, '${product.image}')">Add to Cart</button>
+                    <button onclick="addToFavorites('${product.name}', '${product.image}')">Add to Favorites</button>
+                `;
+                homeList.appendChild(productElement);
+            });
+        }
+
+        function addToCart(name, price, image) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.push({ name, price, image });
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCart();
+        }
+
+        function updateCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartItems = document.getElementById('cartItems');
+            cartItems.innerHTML = '';
+            let total = 0;
+            cart.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" width="50">
+                    <span>${item.name} - ${item.price} Rs</span>
+                `;
+                cartItems.appendChild(cartItem);
+                total += parseFloat(item.price);
+            });
+            document.getElementById('cartTotal').innerText = `Total: ${total.toFixed(2)} Rs`;
+        }
+
+        function clearCart() {
+            localStorage.removeItem('cart');
+            updateCart();
+        }
+
+        function addToFavorites(name, image) {
+            const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            favorites.push({ name, image });
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            updateFavorites();
+        }
+
+        function updateFavorites() {
+            const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            const favoriteItems = document.getElementById('favoriteItems');
+            favoriteItems.innerHTML = '';
+            favorites.forEach(item => {
+                const favoriteItem = document.createElement('div');
+                favoriteItem.className = 'favorite-item';
+                favoriteItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" width="50">
+                    <span>${item.name}</span>
+                `;
+                favoriteItems.appendChild(favoriteItem);
+            });
+        }
+
+        window.onload = () => {
+            loadProducts();
+            loadHomeProducts();
+            updateCart();
+            updateFavorites();
+        };
+    </script>
+</body>
+</html>
