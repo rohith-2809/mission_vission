@@ -17,6 +17,9 @@
             color: #fff;
             padding: 15px;
             text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         nav ul {
@@ -24,6 +27,7 @@
             list-style: none;
             justify-content: center;
             padding: 0;
+            margin: 0;
         }
 
         nav ul li {
@@ -40,14 +44,37 @@
             text-decoration: underline;
         }
 
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background-color: #fff;
+            margin: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav-links.active {
+            display: flex;
+        }
+
         section {
             display: none;
             padding: 20px;
         }
 
         .products {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             justify-content: center;
         }
@@ -57,7 +84,6 @@
             border-radius: 5px;
             padding: 15px;
             text-align: center;
-            width: 200px;
             transition: transform 0.2s;
         }
 
@@ -100,11 +126,12 @@
             padding: 10px;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, transform 0.2s;
         }
 
         button:hover {
             background-color: #218838;
+            transform: scale(1.05);
         }
 
         footer {
@@ -112,20 +139,17 @@
             color: #fff;
             text-align: center;
             padding: 10px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
         }
 
         #cart, #favorites {
-            position: inherit;
+            position: fixed;
             top: 60px;
             right: 20px;
             background-color: #fff;
             border: 1px solid #ddd;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display:none;
+            display: none;
             width: 300px;
             max-height: 400px;
             overflow-y: auto;
@@ -154,9 +178,36 @@
         }
 
         @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            nav ul {
+                display: none;
+                flex-direction: column;
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            .item {
+                width: 100%;
+            }
+
             #cart, #favorites {
                 width: 80%;
                 right: 10%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .item {
+                width: 100%;
+            }
+
+            button {
+                padding: 8px;
             }
         }
     </style>
@@ -164,8 +215,13 @@
 <body>
     <header>
         <h1>Online Shop</h1>
+        <div class="hamburger" onclick="toggleNav()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
         <nav>
-            <ul>
+            <ul class="nav-links">
                 <li><a href="#" onclick="showSection('home')">Home</a></li>
                 <li><a href="#" onclick="showSection('spices')">Spices</a></li>
                 <li><a href="#" onclick="showSection('produce')">Produce</a></li>
@@ -245,22 +301,22 @@
     <script>
         const products = {
             spices: [
-                { name: 'Cumin Powder (200 g)', price: 150, image: 'cumin-powder.jpg', description: 'High-quality cumin powder for rich and aromatic flavors.' },
-                { name: 'Turmeric Powder (500 g)', price: 250, image: 'Gemini_Generated_Image_mxjbcsmxjbcsmxjb.jpeg', description: 'Pure turmeric powder with a vibrant color and taste.' },
-                { name: 'Black Pepper (1 kg)', price: 800, image: 'black-pepper.jpg', description: 'High-quality black pepper for seasoning and cooking.' }
+                { name: 'Turmeric Powder (200 g)', price: 50, image: 'turmeric.jpg', description: 'High-quality turmeric powder for cooking.' },
+                { name: 'Cumin Seeds (100 g)', price: 30, image: 'cumin.jpg', description: 'Fresh and aromatic cumin seeds.' },
+                { name: 'Chili Powder (150 g)', price: 40, image: 'chili.jpg', description: 'Spicy and flavorful chili powder.' }
             ],
             produce: [
-                { name: 'Organic Apples (1 kg)', price: 300, image: 'organic-apples.jpg', description: 'Fresh and juicy organic apples.' },
-                { name: 'Bananas (1 dozen)', price: 100, image: 'bananas.jpg', description: 'Ripe and sweet bananas.' },
-                { name: 'Carrots (500 g)', price: 50, image: 'carrots.jpg', description: 'Crunchy and fresh carrots.' }
+                { name: 'Organic Tomatoes (1 kg)', price: 60, image: 'tomatoes.jpg', description: 'Fresh and juicy organic tomatoes.' },
+                { name: 'Baby Spinach (500 g)', price: 45, image: 'spinach.jpg', description: 'Fresh and tender baby spinach leaves.' },
+                { name: 'Carrots (1 kg)', price: 50, image: 'carrots.jpg', description: 'Crisp and sweet carrots.' }
             ],
             lentils: [
-                { name: 'Red Lentils (1 kg)', price: 120, image: 'red-lentils.jpg', description: 'Premium quality red lentils for healthy meals.' },
-                { name: 'Green Gram (1 kg)', price: 140, image: 'green-gram.jpg', description: 'Nutritious and delicious green gram.' },
-                { name: 'Black Beans (500 g)', price: 90, image: 'black-beans.jpg', description: 'High-protein black beans for various dishes.' }
+                { name: 'Red Lentils (1 kg)', price: 80, image: 'red-lentils.jpg', description: 'Nutritious and easy-to-cook red lentils.' },
+                { name: 'Green Lentils (1 kg)', price: 90, image: 'green-lentils.jpg', description: 'Healthy and versatile green lentils.' },
+                { name: 'Yellow Split Peas (1 kg)', price: 70, image: 'yellow-split-peas.jpg', description: 'Delicious and protein-rich yellow split peas.' }
             ],
             dairy: [
-                { name: 'Fresh Milk (1 litre)', price: 60, image: 'fresh-milk.jpg', description: 'Pure and fresh milk from local farms.' },
+                { name: 'Fresh Milk (1 litre)', price: 60, image: 'milk.jpg', description: 'Fresh milk from local farms.' },
                 { name: 'Cheddar Cheese (200 g)', price: 180, image: 'cheddar-cheese.jpg', description: 'Rich and creamy cheddar cheese.' },
                 { name: 'Greek Yogurt (500 g)', price: 150, image: 'greek-yogurt.jpg', description: 'Thick and creamy Greek yogurt.' }
             ],
@@ -383,6 +439,11 @@
                 `;
                 favoriteItems.appendChild(favoriteItem);
             });
+        }
+
+        function toggleNav() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
         }
 
         window.onload = () => {
